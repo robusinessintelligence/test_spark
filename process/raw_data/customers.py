@@ -94,7 +94,7 @@ df_duplicated_ids = (
         .mode("overwrite")
         .partitionBy("processing_date")
         .format("csv")
-        .save("/jobs/rejected_data/customers_duplicated_ids")
+        .save("/jobs/rejected_data/customers/duplicated_ids")
 )
 
 ################################################################################
@@ -111,7 +111,7 @@ df_invalid_regs = (
         .mode("overwrite")
         .partitionBy("processing_date")
         .format("csv")
-        .save("/jobs/rejected_data/customers_null_fields")
+        .save("/jobs/rejected_data/customers/null_fields")
 )
 
 ################################################################################
