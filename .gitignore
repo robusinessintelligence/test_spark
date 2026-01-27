@@ -7,8 +7,8 @@ __pycache__/
 *.so
 
 # foldes
-./raw_data
-./rejected_data
+raw_data
+rejected_data
 
 # Distribution / packaging
 .Python
