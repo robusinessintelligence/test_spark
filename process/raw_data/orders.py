@@ -37,8 +37,6 @@ df_orders = (
         .load("/jobs/input/orders.json")
 )
 
-df_orders.printSchema()
-
 
 # handle with null fields
 check_null_columns = df_orders.columns
@@ -72,8 +70,6 @@ df_orders_transform_data = df_orders_cleaned.select(
 
     f.upper(f.col("status")).alias("status"),
 )
-
-df_orders_transform_data.show()
         
 
 # ################################################################################
@@ -109,8 +105,6 @@ df_orders_transform_data = (
         .save("/jobs/raw_data/orders")
 )
 
-df_null_fields.show()
-df_orders_transform_data.show()
 
 logger.info(f"total time process: {datetime.now() - start_time}")
 
