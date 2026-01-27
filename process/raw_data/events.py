@@ -3,6 +3,7 @@ import os
 import sys
 from datetime import datetime, timedelta
 
+from env_vars import data_root_path
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
 from pyspark.sql.types import (DoubleType, IntegerType, LongType, StringType,
@@ -41,7 +42,7 @@ df_events = (
     spark.readStream
         .schema(schema_events)
         .format("json")
-        .load("/jobs/input_streaming/events")
+        .load(f"{data_root_path}/input_streaming/events")
 )
 
 # when the event was processed
@@ -76,8 +77,8 @@ streaming_valid_events = (
     df_valid_events.writeStream
         .format("parquet")
         # .option("header", "true")
-        .option("path", "/jobs/raw_data/events")
-        .option("checkpointLocation", "/jobs/raw_data/events/checkpoints/clean_events")
+        .option("path", f"{data_root_path}/raw_data/events")
+        .option("checkpointLocation", f"{data_root_path}/raw_data/events/checkpoints/clean_events")
         .partitionBy("processing_date")
         .outputMode("append")
         .trigger(processingTime='1 seconds')
@@ -88,8 +89,8 @@ streaming_error_events = (
     df_invalid_events.writeStream
         .format("parquet")
         # .option("header", "true")
-        .option("path", "/jobs/rejected_data/events")
-        .option("checkpointLocation", "/jobs/rejected_data/events/checkpoints/error_events")
+        .option("path", f"{data_root_path}/rejected_data/events")
+        .option("checkpointLocation", f"{data_root_path}/rejected_data/events/checkpoints/error_events")
         .partitionBy("processing_date")
         .outputMode("append")
         .trigger(processingTime='1 seconds')

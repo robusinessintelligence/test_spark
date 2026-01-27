@@ -7,8 +7,9 @@ __pycache__/
 *.so
 
 # foldes
-raw_data
-rejected_data
+datalake/raw_data
+datalake/rejected_data
+datalake/output
 
 # Distribution / packaging
 .Python

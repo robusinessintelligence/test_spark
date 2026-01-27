@@ -3,6 +3,7 @@ import os
 import sys
 from datetime import datetime, timedelta
 
+from env_vars import data_root_path
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
 from pyspark.sql.window import Window
@@ -36,7 +37,7 @@ df_customers = (
         .option("header", "True")
         .option("inferSchema", "True")
         .option("sep", ",")
-        .load("/jobs/input/customers.csv")
+        .load(f"{data_root_path}/input/customers.csv")
 )
 
 
@@ -95,7 +96,7 @@ df_duplicated_ids = (
         .partitionBy("processing_date")
         .option("header", "true")
         .format("csv")
-        .save("/jobs/rejected_data/customers/duplicated_ids")
+        .save(f"{data_root_path}/rejected_data/customers/duplicated_ids")
 )
 
 ################################################################################
@@ -113,7 +114,7 @@ df_invalid_regs = (
         .partitionBy("processing_date")
         .option("header", "true")
         .format("csv")
-        .save("/jobs/rejected_data/customers/null_fields")
+        .save(f"{data_root_path}/rejected_data/customers/null_fields")
 )
 
 ################################################################################
@@ -128,7 +129,7 @@ df_customers_cleaned = (
         .mode("overwrite")
         .partitionBy("processing_date")
         .format("parquet")
-        .save("/jobs/raw_data/customers")
+        .save(f"{data_root_path}/raw_data/customers")
 )
 
 logger.info(f"total time process: {datetime.now() - start_time}")

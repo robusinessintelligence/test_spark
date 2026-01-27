@@ -3,6 +3,7 @@ import os
 import sys
 from datetime import datetime, timedelta
 
+from env_vars import data_root_path
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as f
 from pyspark.sql.window import Window
@@ -34,7 +35,7 @@ df_orders = (
     spark.read
         .format("json")
         .option("multiline", "true")
-        .load("/jobs/input/orders.json")
+        .load(f"{data_root_path}/input/orders.json")
 )
 
 
@@ -88,7 +89,7 @@ df_null_fields = (
         .partitionBy("processing_date")
         .option("header", "true")
         .format("csv")
-        .save("/jobs/rejected_data/orders/null_fields")
+        .save(f"{data_root_path}/rejected_data/orders/null_fields")
 )
 
 ################################################################################
@@ -103,7 +104,7 @@ df_orders_transform_data = (
         .mode("overwrite")
         .partitionBy("processing_date")
         .format("parquet")
-        .save("/jobs/raw_data/orders")
+        .save(f"{data_root_path}/raw_data/orders")
 )
 
 
