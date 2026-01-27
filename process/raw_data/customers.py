@@ -93,7 +93,8 @@ df_duplicated_ids = (
     df_duplicated_ids.write
         .mode("overwrite")
         .partitionBy("processing_date")
-        .csv("/jobs/rejected_data/customers_duplicated_ids")
+        .format("csv")
+        .save("/jobs/rejected_data/customers_duplicated_ids")
 )
 
 ################################################################################
@@ -109,7 +110,8 @@ df_invalid_regs = (
     df_invalid_regs.write
         .mode("overwrite")
         .partitionBy("processing_date")
-        .csv("/jobs/rejected_data/customers_null_fields")
+        .format("csv")
+        .save("/jobs/rejected_data/customers_null_fields")
 )
 
 ################################################################################
@@ -123,7 +125,8 @@ df_customers_cleaned = (
     df_customers_cleaned.write
         .mode("overwrite")
         .partitionBy("processing_date")
-        .parquet("/jobs/raw_data/customers")
+        .format("parquet")
+        .save("/jobs/raw_data/customers")
 )
 
 logger.info(f"total time process: {datetime.now() - start_time}")
