@@ -23,6 +23,7 @@ spark = (
     SparkSession.builder
         .appName("events_job")
         .master("spark://spark-master:7077")
+        .config("spark.cores.max", "4")
         .getOrCreate()
 )
 spark.sparkContext.setLogLevel("WARN")
@@ -40,16 +41,28 @@ schema_events = StructType([
 
 df_events = (
     spark.readStream
+        .format("parquet")
         .schema(schema_events)
-        .format("json")
+        .option("startingOffsets", "earliest")
         .load(f"{data_root_path}/raw_data/events")
 )
+
+# df_events = (
+#     spark.read
+#         .schema(schema_events)
+#         .format("json")
+#         .load(f"{data_root_path}/raw_data/events")
+# )
+
+# df_events.show()
 
 query = (
     df_events.writeStream
     .outputMode("append")
     .format("console")
     .option("truncate", "false")
+    .option("checkpointLocation", "/jobs/datalake/checkpoint_data/fact_events")
+    .trigger(processingTime='3 seconds')
     .start()
 )
 

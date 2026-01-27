@@ -45,7 +45,6 @@ df_events = (
         .load(f"{data_root_path}/input_streaming/events")
 )
 
-
 ###########################################################################
 # PROCESS DATA ############################################################
 
@@ -76,9 +75,21 @@ df_valid_events = df_validate_regs.filter(f.col("event_timestamp").isNotNull())
 # get invalid events
 df_invalid_events = df_validate_regs.filter(f.col("event_timestamp").isNull())
 
+# query = (
+#     df_valid_events.writeStream
+#     .outputMode("append")
+#     .format("console")
+#     .option("truncate", "false")
+#     .option("checkpointLocation", "/jobs/datalake/checkpoint_data/test_job")
+#     .trigger(processingTime='3 seconds')
+#     .start()
+# )
 
-# #######################################################################
-# WRITE DATA ############################################################
+# query.awaitTermination()
+
+
+# # #######################################################################
+# # WRITE DATA ############################################################
 checkpoint_folder = "checkpoint_data"
 
 streaming_valid_events = (
@@ -89,7 +100,7 @@ streaming_valid_events = (
         .option("checkpointLocation", f"{data_root_path}/{checkpoint_folder}/clean_events/")
         .partitionBy("processing_date")
         .outputMode("append")
-        .trigger(processingTime='1 seconds')
+        .trigger(processingTime='2 seconds')
         .start()
 )
 
@@ -101,7 +112,7 @@ streaming_error_events = (
         .option("checkpointLocation", f"{data_root_path}/{checkpoint_folder}/error_events/")
         .partitionBy("processing_date")
         .outputMode("append")
-        .trigger(processingTime='1 seconds')
+        .trigger(processingTime='2 seconds')
         .start()
 )
 
