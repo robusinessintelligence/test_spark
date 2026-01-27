@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -25,7 +26,26 @@ spark = (
         .getOrCreate()
 )
 spark.sparkContext.setLogLevel("WARN")
+
+# SPARK CONFIGS
+spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
 # CONFIG SPARK #############################################
+
+
+# GET ARGS
+_PARAMS = json.loads(sys.argv[1]) if len(sys.argv) > 1 else {}
+logger.info(f"\n _PARAMS: {_PARAMS} \n")
+
+
+# GET PROCESS DATE IF EXISTS
+if _PARAMS.get("_PROCESS_DATE", None):
+    _PROCESS_DATE_STR = _PARAMS["_PROCESS_DATE"]
+    _PROCESS_DATE_COL = f.to_date(f.lit(_PARAMS["_PROCESS_DATE"]))
+
+else:
+    _PROCESS_DATE_STR = datetime.now().date()
+    _PROCESS_DATE_COL = f.current_date()
+
 
 start_time = datetime.now()
 
@@ -35,8 +55,9 @@ df_orders = (
     spark.read
         .format("json")
         .option("multiline", "true")
-        .load(f"{data_root_path}/input/orders.json")
+        .load(f"{data_root_path}/input/orders/{_PROCESS_DATE_STR}/orders.json")
 )
+df_orders = df_orders.withColumn("processing_date", _PROCESS_DATE_COL)
 
 
 # handle with null fields
@@ -77,7 +98,6 @@ df_orders_transform_data = df_orders_cleaned.select(
 # save null fields
 df_null_fields = (
     df_null_fields
-        .withColumn("processing_date", f.current_date())
         .withColumn("error_timestamp", f.current_timestamp())
         .withColumn("error_reason", f.lit("null fields regs"))
 
@@ -94,11 +114,6 @@ df_null_fields = (
 
 ################################################################################
 # save clean data
-df_orders_transform_data = (
-    df_orders_transform_data
-        .withColumn("processing_date", f.current_date())
-)
-
 (
     df_orders_transform_data.write
         .mode("overwrite")

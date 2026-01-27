@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -25,7 +26,26 @@ spark = (
         .getOrCreate()
 )
 spark.sparkContext.setLogLevel("WARN")
+
+# SPARK CONFIGS
+spark.conf.set("spark.sql.sources.partitionOverwriteMode", "dynamic")
 # CONFIG SPARK #############################################
+
+
+# GET ARGS
+_PARAMS = json.loads(sys.argv[1]) if len(sys.argv) > 1 else {}
+logger.info(f"\n _PARAMS: {_PARAMS} \n")
+
+
+# GET PROCESS DATE IF EXISTS
+if _PARAMS.get("_PROCESS_DATE", None):
+    _PROCESS_DATE_STR = _PARAMS["_PROCESS_DATE"]
+    _PROCESS_DATE_COL = f.to_date(f.lit(_PARAMS["_PROCESS_DATE"]))
+
+else:
+    _PROCESS_DATE_STR = datetime.now().date()
+    _PROCESS_DATE_COL = f.current_date()
+
 
 start_time = datetime.now()
 
@@ -37,16 +57,17 @@ df_customers = (
         .option("header", "True")
         .option("inferSchema", "True")
         .option("sep", ",")
-        .load(f"{data_root_path}/input/customers.csv")
+        .load(f"{data_root_path}/input/customers/{_PROCESS_DATE_STR}/customers.csv")
 )
+df_customers = df_customers.withColumn("processing_date", _PROCESS_DATE_COL)
 
 
 # handle with duplicated ids
 deduplicate_window = Window.partitionBy("customer_id").orderBy(f.col("created_at").desc())
 
-df_customers_deduplicated = df_customers.withColumn(
-    "duplicate_regs",
-    f.row_number().over(deduplicate_window)
+df_customers_deduplicated = (
+    df_customers
+        .withColumn("duplicate_regs", f.row_number().over(deduplicate_window))
 )
 
 # get duplicated ids
@@ -84,7 +105,6 @@ df_customers_cleaned = (
 # save duplicated
 df_duplicated_ids = (
     df_duplicated_ids
-        .withColumn("processing_date", f.current_date())
         .withColumn("error_timestamp", f.current_timestamp())
         .withColumn("error_reason", f.lit("Duplicated regs"))
 
@@ -103,7 +123,6 @@ df_duplicated_ids = (
 # save invalid regs
 df_invalid_regs = (
     df_invalid_regs
-        .withColumn("processing_date", f.current_date())
         .withColumn("error_timestamp", f.current_timestamp())
         .withColumn("error_reason", f.lit("Missing data fields"))
 )
@@ -119,10 +138,6 @@ df_invalid_regs = (
 
 ################################################################################
 # save clean data
-df_customers_cleaned = (
-    df_customers_cleaned
-        .withColumn("processing_date", f.current_date())
-)
 
 (
     df_customers_cleaned.write
