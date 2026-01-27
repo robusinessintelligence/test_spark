@@ -49,8 +49,9 @@ else:
 
 start_time = datetime.now()
 
-# PROCESS DATA
 
+########################################################################
+# READ DATA ############################################################
 df_customers = (
     spark.read
         .format("csv")
@@ -61,6 +62,9 @@ df_customers = (
 )
 df_customers = df_customers.withColumn("processing_date", _PROCESS_DATE_COL)
 
+
+###########################################################################
+# PROCESS DATA ############################################################
 
 # handle with duplicated ids
 deduplicate_window = Window.partitionBy("customer_id").orderBy(f.col("created_at").desc())
@@ -101,8 +105,9 @@ df_customers_cleaned = (
 #         .drop("duplicate_regs")
 # )
 
-################################################################################
-# save duplicated
+
+# #######################################################################
+# WRITE DATA ############################################################
 df_duplicated_ids = (
     df_duplicated_ids
         .withColumn("error_timestamp", f.current_timestamp())

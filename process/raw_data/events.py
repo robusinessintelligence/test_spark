@@ -29,8 +29,8 @@ spark.sparkContext.setLogLevel("WARN")
 # CONFIG SPARK #############################################
 
 
-# PROCESS DATA
-
+########################################################################
+# READ DATA ############################################################
 schema_events = StructType([
     StructField("customer_id", LongType(), True),
     StructField("event_id", StringType(), True),
@@ -44,6 +44,10 @@ df_events = (
         .format("json")
         .load(f"{data_root_path}/input_streaming/events")
 )
+
+
+###########################################################################
+# PROCESS DATA ############################################################
 
 # when the event was processed
 df_events_transform = (
@@ -73,6 +77,8 @@ df_valid_events = df_validate_regs.filter(f.col("event_timestamp").isNotNull())
 df_invalid_events = df_validate_regs.filter(f.col("event_timestamp").isNull())
 
 
+# #######################################################################
+# WRITE DATA ############################################################
 streaming_valid_events = (
     df_valid_events.writeStream
         .format("parquet")

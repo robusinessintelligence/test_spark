@@ -49,8 +49,9 @@ else:
 
 start_time = datetime.now()
 
-# PROCESS DATA
 
+########################################################################
+# READ DATA ############################################################
 df_orders = (
     spark.read
         .format("json")
@@ -59,6 +60,9 @@ df_orders = (
 )
 df_orders = df_orders.withColumn("processing_date", _PROCESS_DATE_COL)
 
+
+###########################################################################
+# PROCESS DATA ############################################################
 
 # handle with null fields
 check_null_columns = df_orders.columns
@@ -94,8 +98,8 @@ df_orders_transform_data = df_orders_cleaned.select(
 )
         
 
-# ################################################################################
-# save null fields
+# #######################################################################
+# WRITE DATA ############################################################
 df_null_fields = (
     df_null_fields
         .withColumn("error_timestamp", f.current_timestamp())
