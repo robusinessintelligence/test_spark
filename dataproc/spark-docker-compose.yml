@@ -12,7 +12,6 @@ services:
       - "7077:7077"
     
     volumes:
-    # - .:/app
     - ../:/jobs
 
     entrypoint: [ "/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master" ]
@@ -27,13 +26,9 @@ services:
       - SPARK_WORKER_MEMORY=2G
     
     volumes:
-    # - .:/app
     - ../:/jobs
 
     depends_on:
       - spark-master
 
     entrypoint: [ "/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077" ]
-
-# automatic workers
-# docker compose -f spark-docker-compose.yml up -d --scale spark-worker=3
