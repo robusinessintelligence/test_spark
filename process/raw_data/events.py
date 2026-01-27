@@ -23,6 +23,7 @@ spark = (
     SparkSession.builder
         .appName("events_job")
         .master("spark://spark-master:7077")
+        .config("spark.cores.max", "4")
         .getOrCreate()
 )
 spark.sparkContext.setLogLevel("WARN")
@@ -74,18 +75,6 @@ df_valid_events = df_validate_regs.filter(f.col("event_timestamp").isNotNull())
 
 # get invalid events
 df_invalid_events = df_validate_regs.filter(f.col("event_timestamp").isNull())
-
-# query = (
-#     df_valid_events.writeStream
-#     .outputMode("append")
-#     .format("console")
-#     .option("truncate", "false")
-#     .option("checkpointLocation", "/jobs/datalake/checkpoint_data/test_job")
-#     .trigger(processingTime='3 seconds')
-#     .start()
-# )
-
-# query.awaitTermination()
 
 
 # # #######################################################################
