@@ -79,12 +79,14 @@ df_invalid_events = df_validate_regs.filter(f.col("event_timestamp").isNull())
 
 # #######################################################################
 # WRITE DATA ############################################################
+checkpoint_folder = "checkpoint_data"
+
 streaming_valid_events = (
     df_valid_events.writeStream
         .format("parquet")
         # .option("header", "true")
         .option("path", f"{data_root_path}/raw_data/events")
-        .option("checkpointLocation", f"{data_root_path}/raw_data/events/checkpoints/clean_events")
+        .option("checkpointLocation", f"{data_root_path}/{checkpoint_folder}/clean_events/")
         .partitionBy("processing_date")
         .outputMode("append")
         .trigger(processingTime='1 seconds')
@@ -96,7 +98,7 @@ streaming_error_events = (
         .format("parquet")
         # .option("header", "true")
         .option("path", f"{data_root_path}/rejected_data/events")
-        .option("checkpointLocation", f"{data_root_path}/rejected_data/events/checkpoints/error_events")
+        .option("checkpointLocation", f"{data_root_path}/{checkpoint_folder}/error_events/")
         .partitionBy("processing_date")
         .outputMode("append")
         .trigger(processingTime='1 seconds')

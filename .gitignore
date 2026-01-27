@@ -10,6 +10,7 @@ __pycache__/
 datalake/raw_data
 datalake/rejected_data
 datalake/output
+datalake/checkpoint_data
 
 # Distribution / packaging
 .Python
