@@ -79,6 +79,7 @@ df_customers_cleaned = (
 #         .drop("duplicate_regs")
 # )
 
+################################################################################
 # save duplicated
 df_duplicated_ids = (
     df_duplicated_ids
@@ -95,6 +96,7 @@ df_duplicated_ids = (
         .csv("/jobs/rejected_data/customers_duplicated_ids")
 )
 
+################################################################################
 # save invalid regs
 df_invalid_regs = (
     df_invalid_regs
@@ -110,11 +112,19 @@ df_invalid_regs = (
         .csv("/jobs/rejected_data/customers_null_fields")
 )
 
-# save duplicated regs
+################################################################################
+# save clean data
+df_customers_cleaned = (
+    df_customers_cleaned
+        .withColumn("processing_date", f.current_date())
+)
 
-# df_duplicated_ids.show()
-
-df_customers_cleaned.show()
+(
+    df_customers_cleaned.write
+        .mode("overwrite")
+        .partitionBy("processing_date")
+        .parquet("/jobs/raw_data/customers")
+)
 
 logger.info(f"total time process: {datetime.now() - start_time}")
 
