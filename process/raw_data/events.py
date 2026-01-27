@@ -74,8 +74,8 @@ df_invalid_events = df_validate_regs.filter(f.col("event_timestamp").isNull())
 
 streaming_valid_events = (
     df_valid_events.writeStream
-        .format("csv")
-        .option("header", "true")
+        .format("parquet")
+        # .option("header", "true")
         .option("path", "/jobs/raw_data/events")
         .option("checkpointLocation", "/jobs/raw_data/events/checkpoints/clean_events")
         .partitionBy("processing_date")
@@ -86,8 +86,8 @@ streaming_valid_events = (
 
 streaming_error_events = (
     df_invalid_events.writeStream
-        .format("csv")
-        .option("header", "true")
+        .format("parquet")
+        # .option("header", "true")
         .option("path", "/jobs/rejected_data/events")
         .option("checkpointLocation", "/jobs/rejected_data/events/checkpoints/error_events")
         .partitionBy("processing_date")
