@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # CONFIG SPARK #############################################
 spark = (
     SparkSession.builder
-        .appName("customers_raw")
+        .appName("customers_job")
         .master("spark://spark-master:7077")
         .getOrCreate()
 )
@@ -93,6 +93,7 @@ df_duplicated_ids = (
     df_duplicated_ids.write
         .mode("overwrite")
         .partitionBy("processing_date")
+        .option("header", "true")
         .format("csv")
         .save("/jobs/rejected_data/customers/duplicated_ids")
 )
@@ -110,6 +111,7 @@ df_invalid_regs = (
     df_invalid_regs.write
         .mode("overwrite")
         .partitionBy("processing_date")
+        .option("header", "true")
         .format("csv")
         .save("/jobs/rejected_data/customers/null_fields")
 )

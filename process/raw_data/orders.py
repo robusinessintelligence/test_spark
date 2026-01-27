@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # CONFIG SPARK #############################################
 spark = (
     SparkSession.builder
-        .appName("customers_raw")
+        .appName("orders_job")
         .master("spark://spark-master:7077")
         .getOrCreate()
 )
@@ -86,6 +86,7 @@ df_null_fields = (
     df_null_fields.write
         .mode("overwrite")
         .partitionBy("processing_date")
+        .option("header", "true")
         .format("csv")
         .save("/jobs/rejected_data/orders/null_fields")
 )
