@@ -44,7 +44,7 @@ Streaming processes also have processing_date if it's necessary to make some ana
 
 - About the approach, i had little time, i have to handle with my tasks in my current job.
 In a perfect world, i would make this pipeline with Medallion Architecture, or other taking care about the costs with
-one layer for landing and bronze, silver and gold layers of raw and curated or data mesh, depends which costs we have to take care 
+one layer for landing, bronze, silver and gold layers or raw_data and curated_data or data mesh, depends which costs we have to take care 
 when we talk about storage billions of data and business rules complexity.
 
 #### Batch vs streaming considerations
