@@ -59,26 +59,97 @@ we always have to be ahead.
 ### Production Readiness
 
 #### How this would run in:
-- Snowflake
 - AWS / Azure / GCP
 
+- GCP
+    - Documentation of Architecture with details about the process and one Draw with architecture.
+
+    - Trigger to start the process (Scheduler or Cloud Function to check data and Run the Job)
+
+    - Cloud Tasks if it's necessary to reschedule the execution
+
+    - Job 1 in Dataproc to process data and storage at bucket
+    - Integration tests in pipeline
+    - check data quality on dataproc or other way
+
+    - Job 2 in Dataproc to process data and storage at bucket or Bigquery
+    - Integration tests in pipeline
+    - check data quality on dataproc or other way
+
+    - ingestion at BigQuery partitioning table for performance
+
+    - End with some visualization tool as PowerBI or Tableu or etc.
+
+- Azure
+    - Documentation of Architecture with details about the process and one Draw with architecture.
+
+    - Trigger to start the process (Azure Data Factory, or some Azure web function)
+
+    - Job 1 in Databricks to process data and storage at bucket
+    - Integration tests in pipeline
+    - check data quality on databricks or other way
+
+    - Job 2 in Databricks to process data and storage at bucket or Bigquery
+    - Integration tests in pipeline
+    - check data quality on databricks or other way
+
+    - ingestion at Unity Catalog partitioning table for performance
+
+    - End with some visualization tool as PowerBI or Tableu or etc.
+
+- Snowflake or AWS
+    I dont have experience work with snow flake or AWS but the concepts are the same of pipelines above
+
+    - Documentation of Architecture with details about the process and one Draw with architecture.
+
+    - Trigger to start the process
+
+    - Job 1 in Spark to process data and storage at some bucket (datalake)
+    - Integration tests in pipeline
+    - check data quality on databricks or other way
+
+    - Job 2 in Spark to process data and storage at some bucket (datalake)
+    - Integration tests in pipeline
+    - check data quality on databricks or other way
+
+    - ingestion at some Datawarehouse partitioning table for performance
+
+    - End with some visualization tool as PowerBI or Tableu or etc.
+
 #### Where dbt, Airflow, or similar tools would fit
+    - DBT could make some business rules validation, it can be made at Spark, and could make data lineage
+
+    - Airflow could orchestrate de process and start the process with some schedule trigger or some sensor
+    but airflow it's always runing, even if any process are running.
+
 
 ---
 
 ### Data Governance
+- It's could be made with polices at Bigquery and access management at the datasets and at the column of tables (Column-level security).
+- It's could be made with polices at Unity Catalog and access management at the catalogs and at the column of tables (Column-level security).
+
+Both of them could me made with retrict access of visualization tool, like a new layer of access control.
 
 #### Handling PII
+Could be made with polices applied to columns to data masking (Hashing / Pseudonymization)
 
 #### Data quality checks
+Could be made in middle step before delivey data do consuming of client. (Using DBT, Spark or any other tool with this function)
 
 #### Schema evolution strategy
+It's not the only solution, but i like to block the schema at bronze or raw layer and work with merge schema at silver or curated layer.
+This blocks incorrect fields during loading. if there is some new field at the schema, i can add it to the model of schema in pyspark or other tool.
 
 ---
 
 ### Scaling
 - What changes if data volume grows 100x?
+I will need more workers
+
 - Where are the current bottlenecks?
+This is a load for especific table and registers, if its go to production, we need to add some resources like datawarehouse,
+more workers, terraform for infrastructure, a trigger for the process, quality checks, integrations tests.
 
 ---
 
@@ -87,6 +158,8 @@ Please submit:
 - Source code (public Git repository)
 - README.md
 - Clear instructions on how to run the project locally
+
+Install docker
 
 
 <!-- stop docker -->
