@@ -162,6 +162,14 @@ Please submit:
 1. First Step
 [Install docker](https://docs.docker.com/get-started/get-docker/)
 
+2. Git clone
+[Git Clone](https://github.com/robusinessintelligence/test_spark.git)
+
+Example command:
+
+bash```
+git clone https://github.com/robusinessintelligence/test_spark.git
+```
 
 <!-- stop docker -->
 docker compose -f dataproc/spark-docker-compose.yml down
