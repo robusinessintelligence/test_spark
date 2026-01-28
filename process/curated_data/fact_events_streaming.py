@@ -33,63 +33,43 @@ spark.sparkContext.setLogLevel("WARN")
 
 ########################################################################
 # READ DATA ############################################################
+schema_events = StructType([
+    StructField("customer_id", LongType(), True),
+    StructField("event_id", StringType(), True),
+    StructField("event_timestamp", TimestampType(), True),
+    StructField("event_type", StringType(), True),
+])
 
 df_events = (
-    spark.read
+    spark.readStream
         .format("parquet")
+        .schema(schema_events)
+        .option("startingOffsets", "earliest")
         .load(f"{data_root_path}/raw_data/events")
 )
 
-df_customers = (
-    spark.read
-        .format("parquet")
-        .load(f"{data_root_path}/output/dim_customer")
-)
-
-df_events = df_events.alias("event")
-df_customers = df_customers.alias("customer")
 
 ###########################################################################
 # PROCESS DATA ############################################################
 
-deduplicate_window = Window.partitionBy("event_id").orderBy(f.col("event_timestamp").desc(), f.col("processing_date").desc())
-
-df_deduplicate_register = df_events.withColumn("duplicate_regs", f.row_number().over(deduplicate_window))
-
-df_deduplicate_events = (
-    df_deduplicate_register
-        .filter(f.col("duplicate_regs") == 1)
-        .drop("duplicate_regs")
+df_cleaned_events = (
+    df_events
+        .withWatermark("event_timestamp", "10 minutes")
+        .dropDuplicates(["customer_id", "event_timestamp"])
 )
 
-
-df_events_join_customers = df_deduplicate_events.join(
-    df_customers,
-    on=(f.col("event.customer_id") == f.col("customer.customer_id")),
-    how="inner",
-)
-
-df_fact_events = df_events_join_customers.select(
-    f.col('event.event_id'),
-    f.col('event.customer_id'),
-    f.col('customer.name'),
-    f.col('customer.email'),
-    f.col('customer.country'),
-    f.col('event.event_type'),
-    f.col('customer.created_at'),
-    f.col('event.event_timestamp'),
-    f.col('event.processing_date'),
-)
 
 # #######################################################################
 # WRITE DATA ############################################################
-
-(
-    df_fact_events.write
-        .mode("overwrite")
-        .partitionBy("processing_date")
+streaming_valid_events = (
+    df_cleaned_events.writeStream
         .format("parquet")
-        .save(f"{data_root_path}/output/fact_events")
+        .option("path", f"{data_root_path}/output/fact_events_streaming")
+        .option("checkpointLocation", f"{data_root_path}/checkpoint_data/clean_fact_events_streaming")
+        .partitionBy("processing_date")
+        .outputMode("append")
+        .trigger(processingTime='3 seconds')
+        .start()
 )
 
-spark.stop()
+streaming_valid_events.awaitTermination()

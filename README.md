@@ -14,5 +14,7 @@ docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_d
 docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/orders.py
 
 docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/events.py [streaming]
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events.py [streaming]
+docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events_streaming.py [streaming]
+
+docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events.py
 docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events_check_data.py
