@@ -43,7 +43,7 @@ Streaming processes also have processing_date if it's necessary to make some ana
 - The language python it's very popular, and has a low learning curve, so it's easier to find people who work with that
 
 - About the approach, i had little time, i have to handle with my tasks in my current job.
-In a perfect world or future job, i would make this pipeline with Medallion Architecture, or other taking care about the costs with
+In a perfect world, i would make this pipeline with Medallion Architecture, or other taking care about the costs with
 one layer for landing and bronze, silver and gold layers of raw and curated or data mesh, depends which costs we have to take care 
 when we talk about storage billions of data and business rules complexity.
 
