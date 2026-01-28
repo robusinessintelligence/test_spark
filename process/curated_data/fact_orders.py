@@ -57,8 +57,17 @@ df_customers = df_customers.alias("customer")
 ###########################################################################
 # PROCESS DATA ############################################################
 
+deduplicate_window = Window.partitionBy("order_id").orderBy(f.col("order_date").desc())
 
-df_orders_join_customers = df_orders.join(
+df_deduplicate_register = df_orders.withColumn("duplicate_regs", f.row_number().over(deduplicate_window))
+
+df_deduplicate_orders = (
+    df_deduplicate_register
+        .filter(f.col("duplicate_regs") == 1)
+        .drop("duplicate_regs")
+)
+
+df_orders_join_customers = df_deduplicate_orders.join(
     df_customers,
     on=(f.col("order.customer_id") == f.col("customer.customer_id")),
     how="left",
