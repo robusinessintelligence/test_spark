@@ -170,8 +170,9 @@ Please submit:
 
 Example command:
 
-bash```
+```bash
 git clone https://github.com/robusinessintelligence/test_spark.git
+```
 
 <!-- stop docker -->
 docker compose -f dataproc/spark-docker-compose.yml down
