@@ -3,37 +3,63 @@
     - Orders
     - Events
 
+---
+
 ### Architecture & Design
 
-    #### Overall pipeline architecture
-    - The architecture is divided into two stages, raw_data and curated_data
-    raw_data it's data from folder input (landing) here i make some transformations 
-    to have sure the quality of data
+#### Overall pipeline architecture
+- The architecture is divided into two stages, raw_data and curated_data
+raw_data it's data from folder input (landing) here i make some transformations 
+to have sure the quality of data
 
-    - On curated_data i take care of duplicate data if some reprocess happens 
-    and make some aggregations to build final reports.
+- On curated_data i take care of duplicate data if some reprocess happens 
+and make some aggregations to build final reports.
 
-    • Data flow from ingestion to output
+#### Data flow from ingestion to output
 
-Technical Decisions
-    • Why this language and approach?
-    • Batch vs streaming considerations
-    • How idempotency and reprocessing would work
+---
 
-Production Readiness
-    • How this would run in:
-    o Snowflake
-    o AWS / Azure / GCP
-    • Where dbt, Airflow, or similar tools would fit
+### Technical Decisions
 
-Data Governance
-    • Handling PII
-    • Data quality checks
-    • Schema evolution strategy
+#### Why this language and approach?
 
-Scaling
-    • What changes if data volume grows 100x?
-    • Where are the current bottlenecks?
+#### Batch vs streaming considerations
+
+#### How idempotency and reprocessing would work
+
+---
+
+### Production Readiness
+
+#### How this would run in:
+- Snowflake
+- AWS / Azure / GCP
+
+#### Where dbt, Airflow, or similar tools would fit
+
+---
+
+### Data Governance
+
+#### Handling PII
+
+#### Data quality checks
+
+#### Schema evolution strategy
+
+---
+
+### Scaling
+- What changes if data volume grows 100x?
+- Where are the current bottlenecks?
+
+---
+
+### Delivery Instructions
+Please submit:
+- Source code (public Git repository)
+- README.md
+- Clear instructions on how to run the project locally
 
 
 <!-- stop docker -->
