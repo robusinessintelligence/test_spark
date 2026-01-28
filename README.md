@@ -162,10 +162,10 @@ Please submit:
 ---
 ### Install Instructions
 
-1. First Step
+1. First Step:
     [Install docker](https://docs.docker.com/get-started/get-docker/)
 
-2. Clone the repo
+2. Clone the repo:
     [Git Clone](https://github.com/robusinessintelligence/test_spark.git)
 
     Example command:
@@ -173,7 +173,7 @@ Please submit:
     git clone https://github.com/robusinessintelligence/test_spark.git
     ```
 
-3. Run docker
+3. Run docker at terminal:
     ```bash
     <!-- run docker -->
     docker compose -f dataproc/spark-docker-compose.yml up -d --scale spark-worker=3 
@@ -182,7 +182,7 @@ Please submit:
     docker compose -f dataproc/spark-docker-compose.yml down
     ```
 
-4. Execute the pipelines
+4. Execute pipelines example:
 
     ```bash
     <!-- raw_processes -->
