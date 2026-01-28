@@ -173,22 +173,38 @@ Please submit:
     git clone https://github.com/robusinessintelligence/test_spark.git
     ```
 
-<!-- stop docker -->
-docker compose -f dataproc/spark-docker-compose.yml down
+3. Run docker
+    ```bash
+    <!-- run docker -->
+    docker compose -f dataproc/spark-docker-compose.yml up -d --scale spark-worker=3 
 
-<!-- to run docker -->
-docker compose -f dataproc/spark-docker-compose.yml up -d --scale spark-worker=3 
+    <!-- stop docker -->
+    docker compose -f dataproc/spark-docker-compose.yml down
+    ```
 
-<!-- run job -->
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/customers.py
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/customers.py '{"_PROCESS_DATE": "2026-01-01"}'
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/dim_customer.py
+4. Execute the pipelines
 
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/orders.py
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_orders.py
+    ```bash
+    <!-- raw_processes -->
 
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/events.py [streaming]
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events_streaming.py [streaming]
+        <!-- run job example -->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/customers.py
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/orders.py
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/events.py [streaming]
 
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events.py
-docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events_check_data.py
+        <!-- run job with parameters-->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/raw_data/customers.py '{"_PROCESS_DATE": "2026-01-01"}'
+
+
+    <!-- curated_processes -->
+
+        <!-- run job example -->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/dim_customer.py
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_orders.py
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events.py
+    
+
+    <!-- data checks test-->
+    docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events_streaming.py [streaming]
+    docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/curated_data/fact_events_check_data.py
+    ```
