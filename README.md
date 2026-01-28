@@ -159,7 +159,8 @@ Please submit:
 - README.md
 - Clear instructions on how to run the project locally
 
-Install docker
+1. First Step
+[Install docker](https://docs.docker.com/get-started/get-docker/)
 
 
 <!-- stop docker -->
