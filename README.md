@@ -165,7 +165,7 @@ Please submit:
 1. First Step
     [Install docker](https://docs.docker.com/get-started/get-docker/)
 
-2. Git clone
+2. Clone the repo
     [Git Clone](https://github.com/robusinessintelligence/test_spark.git)
 
     Example command:
