@@ -217,6 +217,18 @@ Please submit:
         docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/silver/taxi_zone_lookup.py
 
         docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/silver/aux_dim_tables.py
+    
+
+    <!-- gold -->
+
+
+
+        docker exec -it spark-master /opt/spark/bin/spark-submit \
+            --master spark://spark-master:7077 \
+            --packages org.postgresql:postgresql:42.6.0 \
+            --conf "spark.driver.extraClassPath=/root/.ivy2/jars/*" \
+            --conf "spark.executor.extraClassPath=/root/.ivy2/jars/*" \
+            /jobs/process/gold/test.py
 
     <!-- raw_processes -->
 
