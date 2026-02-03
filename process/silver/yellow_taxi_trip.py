@@ -59,7 +59,23 @@ except Exception as err:
 
 df_source = df_source.withColumn("processing_date", f.current_date())
 
-df_source.show()
+total_secs = (
+    f.col("tpep_dropoff_datetime").cast("timestamp").cast("long") 
+    - f.col("tpep_pickup_datetime").cast("timestamp").cast("long")
+)
+
+df_transform = df_source.withColumn(
+    "tpep_total_trip_time",
+    f.format_string(
+        "%02d:%02d:%02d",
+        (total_secs / 3600).cast("int"),
+        ((total_secs % 3600) / 60).cast("int"),
+        (total_secs % 60).cast("int"),
+    )
+)
+
+
+df_transform.show()
 
 # df_source_transform = (
 #     df_source
