@@ -86,24 +86,20 @@ df_transform_3 = df_transform_2.withColumn(
     f.md5(f.concat_ws("|", "VendorID", "tpep_pickup_datetime", "PULocationID"))
 )
 
-df_transform_3.printSchema()
-
 df_filter = df_transform_3.filter((f.col("total_amount") > 0) & (f.col("trip_distance") > 0))
-
-df_filter.show()
 
 # #######################################################################
 # WRITE DATA ############################################################
 
 # save clean data
 
-# (
-#     df_source_transform.write
-#         .mode("overwrite")
-#         .partitionBy("year", "month")
-#         .format("parquet")
-#         .save(f"{data_root_path}/silver/{topic}")
-# )
+(
+    df_filter.write
+        .mode("overwrite")
+        .partitionBy("year", "month")
+        .format("parquet")
+        .save(f"{data_root_path}/silver/fact_trips")
+)
 
 logger.info(f"total time process: {datetime.now() - start_time}")
 
