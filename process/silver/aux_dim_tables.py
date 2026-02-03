@@ -77,7 +77,7 @@ dim_rate_code = spark.createDataFrame(rate_code_data)
 )
 
 (
-    dim_vendor.write
+    dim_rate_code.write
         .mode("overwrite")
         .format("parquet")
         .save(f"{data_root_path}/silver/dim_rate_code")
