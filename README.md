@@ -221,14 +221,14 @@ Please submit:
 
     <!-- gold -->
 
-
+        <!-- run job example -->
 
         docker exec -it spark-master /opt/spark/bin/spark-submit \
             --master spark://spark-master:7077 \
             --packages org.postgresql:postgresql:42.6.0 \
             --conf "spark.driver.extraClassPath=/root/.ivy2/jars/*" \
             --conf "spark.executor.extraClassPath=/root/.ivy2/jars/*" \
-            /jobs/process/gold/test.py
+            /jobs/process/gold/write_to_db.py
 
     <!-- raw_processes -->
 
