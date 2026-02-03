@@ -1,4 +1,15 @@
 services:
+  db:
+    image: postgres:15
+    container_name: postgres_nyc
+    environment:
+      POSTGRES_USER: user_spark
+      POSTGRES_PASSWORD: password_spark
+      POSTGRES_DB: nyc_taxi
+    ports:
+      - "5432:5432"
+    networks:
+      - taxi_network
 
   spark-master:
     build: .
@@ -15,12 +26,14 @@ services:
     volumes:
       - ../:/jobs
 
+    networks:
+      - taxi_network
+
     entrypoint: [ "/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master" ]
 
   spark-worker:
     build: .
     user: "0:0"
-
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -30,7 +43,14 @@ services:
     volumes:
       - ../:/jobs
 
+    networks:
+      - taxi_network
+
     depends_on:
       - spark-master
 
     entrypoint: [ "/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker", "spark://spark-master:7077" ]
+
+networks:
+  taxi_network:
+    driver: bridge
