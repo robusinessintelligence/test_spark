@@ -46,8 +46,6 @@ start_time = datetime.now()
 topic = "taxi_zone_lookup"
 bronze_path = f"{data_root_path}/bronze/{topic}"
 
-# path = f"{landing_path}/taxi_zone_lookup.csv" 
-
 try:
 
     df_source = (
@@ -66,19 +64,17 @@ except Exception as err:
 
 df_source = df_source.withColumn("processing_date", f.current_date())
 
-df_source.show()
-
 # #######################################################################
 # WRITE DATA ############################################################
 
 # save clean data
 
-# (
-#     df_source.write
-#         .mode("overwrite")
-#         .format("parquet")
-#         .save(f"{data_root_path}/bronze/{topic}")
-# )
+(
+    df_source.write
+        .mode("overwrite")
+        .format("parquet")
+        .save(f"{data_root_path}/silver/dim_zone")
+)
 
 logger.info(f"total time process: {datetime.now() - start_time}")
 
