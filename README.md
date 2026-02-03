@@ -189,10 +189,24 @@ Please submit:
 
         <!-- run job example -->
         docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/landing/yellow_taxi_trip.py
+
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/landing/taxi_zone_lookup.py
         
 
         <!-- run job with parameters-->
         docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/landing/yellow_taxi_trip.py '{"_PROCESS_DATE": "2026-01-01"}'
+    
+
+    <!-- bronze -->
+
+        <!-- run job example -->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/bronze/yellow_taxi_trip.py
+
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/bronze/taxi_zone_lookup.py
+        
+
+        <!-- run job with parameters-->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/bronze/yellow_taxi_trip.py '{"_START_DATE": "2025-10-01", "_END_DATE": "2026-02-01"}'
 
     <!-- raw_processes -->
 

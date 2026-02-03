@@ -21,29 +21,13 @@ logger = logging.getLogger(__name__)
 _PARAMS = json.loads(sys.argv[1]) if len(sys.argv) > 1 else {}
 logger.info(f"\n _PARAMS: {_PARAMS} \n")
 
-
-# GET PROCESS DATE IF EXISTS
-if _PARAMS.get("_PROCESS_DATE", None):
-
-    try:
-        _PROCESS_DATE = datetime.strptime(_PARAMS["_PROCESS_DATE"], '%Y-%m-%d')
-        year_month = _PROCESS_DATE.strftime("%Y-%m")
-
-    except Exception as err:
-        logger.error(f"Error on get _PROCESS_DATE param")
-        raise err
-
-else:
-    _PROCESS_DATE = datetime.now().date()
-    year_month = _PROCESS_DATE.strftime("%Y-%m")
-
 start_time = datetime.now()
 
 ########################################################################
 # READ DATA ############################################################
 
 topic = "taxi_zone_lookup"
-landing_path = f"{data_root_path}/landing/{topic}/{year_month}"
+landing_path = f"{data_root_path}/landing/{topic}"
 
 if not os.path.exists(landing_path):
     os.makedirs(landing_path)
