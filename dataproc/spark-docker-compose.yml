@@ -1,7 +1,8 @@
 services:
 
   spark-master:
-    image: apache/spark:latest
+    build: .
+    user: "0:0"
     container_name: spark-master
 
     environment:
@@ -10,23 +11,24 @@ services:
     ports:
       - "8080:8080"
       - "7077:7077"
-    
+
     volumes:
-    - ../:/jobs
+      - ../:/jobs
 
     entrypoint: [ "/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master" ]
 
   spark-worker:
-    image: apache/spark:latest
+    build: .
+    user: "0:0"
 
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_CORES=2
       - SPARK_WORKER_MEMORY=2G
-    
+
     volumes:
-    - ../:/jobs
+      - ../:/jobs
 
     depends_on:
       - spark-master

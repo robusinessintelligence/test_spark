@@ -185,6 +185,15 @@ Please submit:
 4. Execute pipelines example:
 
     ```bash
+    <!-- landing -->
+
+        <!-- run job example -->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/landing/yellow_taxi_trip.py
+        
+
+        <!-- run job with parameters-->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/landing/yellow_taxi_trip.py '{"_PROCESS_DATE": "2026-01-01"}'
+
     <!-- raw_processes -->
 
         <!-- run job example -->
