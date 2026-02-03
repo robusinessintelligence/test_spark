@@ -216,6 +216,7 @@ Please submit:
 
         docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/silver/taxi_zone_lookup.py
 
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/silver/aux_dim_tables.py
 
     <!-- raw_processes -->
 
