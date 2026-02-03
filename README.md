@@ -207,6 +207,15 @@ Please submit:
 
         <!-- run job with parameters-->
         docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/bronze/yellow_taxi_trip.py '{"_START_DATE": "2025-10-01", "_END_DATE": "2026-02-01"}'
+    
+
+    <!-- silver -->
+
+        <!-- run job example -->
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/silver/yellow_taxi_trip.py
+
+        docker exec -it spark-master /opt/spark/bin/spark-submit /jobs/process/silver/taxi_zone_lookup.py
+
 
     <!-- raw_processes -->
 
