@@ -90,31 +90,7 @@ df_transform_3.printSchema()
 
 df_filter = df_transform_3.filter((f.col("total_amount") > 0) & (f.col("trip_distance") > 0))
 
-# VendorID,Descrição
-# 1,"Creative Mobile Technologies, LLC"
-# 2,VeriFone Inc.
-
-# RatecodeID,Descrição
-# 1,Standard rate
-# 2,JFK
-# 3,Newark
-# 4,Nassau or Westchester
-# 5,Negotiated fare
-# 6,Group ride
-
 df_filter.show()
-
-# df_source_transform = (
-#     df_source
-#         .withColumn(
-#             "year",
-#             f.year(f.to_date("tpep_pickup_datetime"))
-#         )
-#         .withColumn(
-#             "month",
-#             f.date_format("tpep_pickup_datetime", "MM")
-#         )
-# )
 
 # #######################################################################
 # WRITE DATA ############################################################
