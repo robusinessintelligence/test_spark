@@ -126,7 +126,7 @@ df_filter.show()
 #         .mode("overwrite")
 #         .partitionBy("year", "month")
 #         .format("parquet")
-#         .save(f"{data_root_path}/bronze/{topic}")
+#         .save(f"{data_root_path}/silver/{topic}")
 # )
 
 logger.info(f"total time process: {datetime.now() - start_time}")
