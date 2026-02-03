@@ -80,6 +80,8 @@ try:
     df_dim_zone.write.jdbc(db_url, "dim_zone", mode="overwrite", properties=db_properties)
     df_fact_trips.write.jdbc(db_url, "fact_trips", mode="overwrite", properties=db_properties)
 
+    logger.info(f"Done!")
+
 except Exception as err:
     logger.info(f"error on write to db")
     raise err
