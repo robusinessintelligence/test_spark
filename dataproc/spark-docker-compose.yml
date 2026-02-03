@@ -1,13 +1,17 @@
 services:
+
   db:
     image: postgres:15
     container_name: postgres_nyc
+
     environment:
       POSTGRES_USER: user_spark
       POSTGRES_PASSWORD: password_spark
       POSTGRES_DB: nyc_taxi
+
     ports:
       - "5432:5432"
+
     networks:
       - taxi_network
 

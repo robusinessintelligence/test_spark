@@ -57,7 +57,7 @@ try:
     df_dim_rate_code = spark.read.format("parquet").load(f"{silver_path}/dim_rate_code")
     df_dim_vendor = spark.read.format("parquet").load(f"{silver_path}/dim_vendor")
     df_dim_zone = spark.read.format("parquet").load(f"{silver_path}/dim_zone")
-    # df_fact_trips = spark.read.format("parquet").load(f"{silver_path}/fact_trips")
+    df_fact_trips = spark.read.format("parquet").load(f"{silver_path}/fact_trips")
 
 except Exception as err:
     logger.info(f"error on reading files")
@@ -78,7 +78,7 @@ try:
     df_dim_rate_code.write.jdbc(db_url, "dim_rate_code", mode="overwrite", properties=db_properties)
     df_dim_vendor.write.jdbc(db_url, "dim_vendor", mode="overwrite", properties=db_properties)
     df_dim_zone.write.jdbc(db_url, "dim_zone", mode="overwrite", properties=db_properties)
-    # df_fact_trips.write.jdbc(db_url, "fact_trips", mode="overwrite", properties=db_properties)
+    df_fact_trips.write.jdbc(db_url, "fact_trips", mode="overwrite", properties=db_properties)
 
 except Exception as err:
     logger.info(f"error on write to db")
