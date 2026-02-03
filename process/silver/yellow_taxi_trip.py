@@ -65,7 +65,7 @@ total_secs = (
 )
 
 df_transform = df_source.withColumn(
-    "tpep_total_trip_time",
+    "tpep_total_trip_time_str",
     f.format_string(
         "%02d:%02d:%02d",
         (total_secs / 3600).cast("int"),
@@ -75,7 +75,23 @@ df_transform = df_source.withColumn(
 )
 
 
-df_transform.show()
+df_transform_2 = df_transform.withColumn(
+    "tpep_total_trip_time_secs",
+    total_secs
+)
+
+
+df_transform_3 = df_transform_2.withColumn(
+    "trip_id",
+    f.md5(f.concat_ws("|", "VendorID", "tpep_pickup_datetime", "PULocationID"))
+)
+
+df_transform_3.printSchema()
+
+df_filter = df_transform_3.filter((f.col("total_amount") > 0) & (f.col("trip_distance") > 0))
+
+
+df_filter.show()
 
 # df_source_transform = (
 #     df_source
